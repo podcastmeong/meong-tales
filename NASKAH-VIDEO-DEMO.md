@@ -25,7 +25,7 @@ route and latency."
 
 ## 0:45–1:15 — Podcast mini (Oyen & Momo bicara)
 **Visual:** Klik "Listen". Oyen berbicara (suara tinggi), lalu Momo (suara
-rendah). Mulut avatar bergerak mengikuti suara. Sorot dialog 2 baris.
+rendah). Sorot dialog 2 baris.
 **Narasi:** "Then Oyen and Momo read it aloud as a mini podcast — two distinct
 voices, high and low. The story teaches patience, from the story of Prophet
 Job — with verified sources, never invented verses."

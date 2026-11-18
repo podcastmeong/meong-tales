@@ -173,3 +173,8 @@ git push -u origin main
   tidak ada submit/daftar ke mana pun; tidak ada data/kunci yang dipakai
   (config masih placeholder). Semua harga/syarat di atas dibaca dari halaman
   resmi (URL tercantum); yang tidak terverifikasi ditandai BELUM TERVERIFIKASI.
+
+## Perubahan 19 Nov 2026 (perintah Cipta: "Avatar di web hapus aja")
+- Avatar Oyen & Momo DIHAPUS dari aplikasi web: gambar `assets/oyen-avatar.jpg` + `assets/momo-avatar.jpg` dihapus, blok `.avatars` di `index.html` dihapus, aturan CSS avatar dihapus, komentar puppet di `js/tts.js` diperbarui.
+- Yang TETAP: cerita 5 halaman, dialog dua suara (Oyen tinggi / Momo rendah via Web Speech API), tombol Dengarkan. Fungsi puppet di `tts.js` kini no-op (null-safe) — tidak ada error bila elemen avatar tidak ada.
+- Alasan: perintah langsung pemilik ("Ini untuk lomba" — tampilan lomba tanpa avatar).
