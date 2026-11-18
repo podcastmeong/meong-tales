@@ -178,7 +178,10 @@ function setBusy(busy, label) {
   state.busy = busy;
   $("#make-btn").disabled = busy;
   $("#make-btn").textContent = busy ? (label || t("generating")) : t("make");
-  $("#status-line").textContent = busy ? (label || t("generating")) : "";
+  // Jangan hapus pesan error live saat fallback: finally di onMakeStory
+  // memanggil setBusy(false) setelah pesan ditulis — tanpa ini baris status
+  // selalu kosong dan penyebab gagal live tidak pernah terlihat.
+  $("#status-line").textContent = busy ? (label || t("generating")) : (state.lastLiveError || "");
 }
 
 async function onMakeStory() {
