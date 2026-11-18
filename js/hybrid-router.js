@@ -43,7 +43,7 @@
 //      Firebase console (Security > App Check > Apps > Manage debug tokens).
 // ============================================================================
 
-import { FIREBASE_CONFIG } from "./firebase-config.js";
+import { FIREBASE_CONFIG } from "./firebase-config.js?v=4";
 
 export const ROUTES = {
   ON_DEVICE: "on-device",

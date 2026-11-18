@@ -178,3 +178,8 @@ git push -u origin main
 - Revert commit penghapusan avatar: `assets/oyen-avatar.jpg` + `assets/momo-avatar.jpg` kembali, blok `.avatars` di `index.html` kembali, aturan CSS avatar kembali, puppet mulut di `js/tts.js` aktif lagi.
 - Cerita + suara TETAP terpasang (tidak pernah dihapus — Cipta: "Tetap pasang cerita Dan suara").
 - Status akhir: avatar ADA, cerita ADA, suara ADA.
+
+## Verifikasi versi SDK 19 Nov 2026 (sebelum submit)
+- Pin CDN `12.5.0` TERVERIFIKASI ADA (hybrid inference ditambahkan di SDK 12.1.0, Agt 2025; dokumen resmi menulis "v12.5.0+"). Tidak perlu diganti untuk lomba.
+- Versi terbaru saat dicek: Firebase JS SDK 13.4.0 (16 Nov 2026). v13.0.0 (7 Okt 2026) membawa breaking changes AI Logic (model hybrid in-cloud default jadi gemini-3.5-flash-lite; VertexAIBackend dihapus) — kode aplikasi ini tidak memakai API yang dihapus (hanya getAI, GoogleAIBackend, getGenerativeModel, InferenceMode, initializeDeviceModel, generateContent), tapi upgrade TIDAK dilakukan sebelum submit tanpa uji live penuh.
+- Model yang dipakai aplikasi: "gemini-2.0-flash" (quick + story). Masih didukung Gemini Developer API.
