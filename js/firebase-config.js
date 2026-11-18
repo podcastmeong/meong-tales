@@ -19,10 +19,10 @@
 // ============================================================================
 
 export const FIREBASE_CONFIG = {
-  apiKey: "PASTE_YOUR_FIREBASE_API_KEY_HERE",
-  authDomain: "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "PASTE_YOUR_PROJECT_ID",
-  storageBucket: "PASTE_YOUR_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "PASTE_YOUR_SENDER_ID",
-  appId: "PASTE_YOUR_APP_ID",
+  apiKey: "AIzaSyD-F1wZVS8Zp5I3b6WUZ94W_9BFI6J9p7k",
+  authDomain: "meong-tales.firebaseapp.com",
+  projectId: "meong-tales",
+  storageBucket: "meong-tales.firebasestorage.app",
+  messagingSenderId: "47236923728",
+  appId: "1:47236923728:web:138381e7b4944a1e136c55",
 };

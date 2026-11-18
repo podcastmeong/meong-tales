@@ -88,17 +88,16 @@ export async function initHybrid() {
     firebaseModules = { appMod, checkMod, aiMod };
     firebaseApp = appMod.initializeApp(FIREBASE_CONFIG);
 
-    // App Check (debug provider for local development — see README.md).
-    // Per the official docs: set self.FIREBASE_APPCHECK_DEBUG_TOKEN = true
-    // BEFORE initializeAppCheck; the console then prints a debug token to
-    // safelist in the Firebase console (Security > App Check > Manage
-    // debug tokens). Replace "YOUR_RECAPTCHA_V3_SITE_KEY" with your key.
-    if (typeof self !== "undefined" && self.FIREBASE_APPCHECK_DEBUG_TOKEN) {
-      checkMod.initializeAppCheck(firebaseApp, {
-        provider: new checkMod.ReCaptchaV3Provider("YOUR_RECAPTCHA_V3_SITE_KEY"),
-        isTokenAutoRefreshEnabled: true,
-      });
-    }
+    // App Check — REQUIRED for Firebase AI Logic (contest rules).
+    // Console registration: Fraud Defense (reCAPTCHA Enterprise), so the
+    // provider here MUST be ReCaptchaEnterpriseProvider with the real
+    // Enterprise site key (site keys are public by design). When
+    // self.FIREBASE_APPCHECK_DEBUG_TOKEN is set (local dev), the SDK
+    // substitutes the debug provider automatically.
+    checkMod.initializeAppCheck(firebaseApp, {
+      provider: new checkMod.ReCaptchaEnterpriseProvider("6LfiDCcuAAAAAMjEXEB3GkWGU7LNo1WMgATi2h3d"),
+      isTokenAutoRefreshEnabled: true,
+    });
 
     const ai = aiMod.getAI(firebaseApp, { backend: new aiMod.GoogleAIBackend() });
 
