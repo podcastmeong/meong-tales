@@ -12,10 +12,10 @@
 //   4. "Dengarkan" -> playDialogue() with locked Oyen/Momo voices.
 // ============================================================================
 
-import { FIGURES, getFigure } from "./content-bank.js?v=4";
-import { initHybrid, warmDeviceModel, getStatus, routeLabel, ROUTES } from "./hybrid-router.js?v=4";
-import { buildTemplateStory, buildLiveStory, quickMoral, suggestFigure } from "./story-engine.js?v=4";
-import { playDialogue, stopSpeaking, isTTSAvailable } from "./tts.js?v=4";
+import { FIGURES, getFigure } from "./content-bank.js?v=5";
+import { initHybrid, warmDeviceModel, getStatus, routeLabel, ROUTES } from "./hybrid-router.js?v=5";
+import { buildTemplateStory, buildLiveStory, quickMoral, suggestFigure } from "./story-engine.js?v=5";
+import { playDialogue, stopSpeaking, isTTSAvailable } from "./tts.js?v=5";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -208,7 +208,9 @@ async function onMakeStory() {
         // Live failed or unparsable: honest fallback to verified template.
         state.lastLiveError = res.error || "Live failed — using verified template.";
         $("#status-line").textContent = state.lastLiveError;
-        renderStory(buildTemplateStory({ figureId, theme, lang: state.lang }));
+        const fallback = buildTemplateStory({ figureId, theme, lang: state.lang });
+        fallback.ms = res.ms; // show the real time the live attempt took
+        renderStory(fallback);
         renderStatus();
       }
     } else {

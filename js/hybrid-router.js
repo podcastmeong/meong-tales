@@ -43,7 +43,7 @@
 //      Firebase console (Security > App Check > Apps > Manage debug tokens).
 // ============================================================================
 
-import { FIREBASE_CONFIG } from "./firebase-config.js?v=4";
+import { FIREBASE_CONFIG } from "./firebase-config.js?v=5";
 
 export const ROUTES = {
   ON_DEVICE: "on-device",
@@ -111,6 +111,12 @@ export async function initHybrid() {
       mode: aiMod.InferenceMode.PREFER_IN_CLOUD,
       model: "gemini-2.0-flash",
     });
+    // Plain cloud-only model (no InferenceMode): the guaranteed fallback
+    // when the hybrid path fails BEFORE reaching the cloud — e.g. when the
+    // browser's on-device Prompt API is disabled, the SDK throws
+    // "The feature flag gating model execution was disabled." instead of
+    // falling back. This model never touches the on-device check at all.
+    models.cloudOnly = aiMod.getGenerativeModel(ai, { model: "gemini-2.0-flash" });
 
     liveReady = true;
     return { live: true, reason: "Firebase AI Logic ready (hybrid)." };
@@ -161,11 +167,32 @@ export async function generate(task, prompt) {
     const route = task === "quick" ? ROUTES.ON_DEVICE : ROUTES.CLOUD;
     return { text: text.trim(), route, ms: Date.now() - started };
   } catch (err) {
+    // Hybrid path failed: retry ONCE with the plain cloud-only model. This
+    // matters because the hybrid SDK checks the on-device Prompt API first
+    // and throws when it is disabled, without ever reaching the cloud.
+    const hybridMsg = err && err.message ? err.message : String(err);
+    if (models.cloudOnly) {
+      try {
+        const result = await models.cloudOnly.generateContent(prompt);
+        const text = result && result.response ? result.response.text() : "";
+        if (text && text.trim()) {
+          return { text: text.trim(), route: ROUTES.CLOUD, ms: Date.now() - started };
+        }
+        throw new Error("Empty response from cloud model.");
+      } catch (err2) {
+        return {
+          text: null,
+          route: ROUTES.TEMPLATE,
+          ms: Date.now() - started,
+          error: `Live generation failed: ${err2 && err2.message ? err2.message : String(err2)} (hybrid error was: ${hybridMsg})`,
+        };
+      }
+    }
     return {
       text: null,
       route: ROUTES.TEMPLATE,
       ms: Date.now() - started,
-      error: `Live generation failed: ${err && err.message ? err.message : String(err)}`,
+      error: `Live generation failed: ${hybridMsg}`,
     };
   }
 }
