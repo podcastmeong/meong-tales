@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meong Tales — Cerita Anak Islami dari Satu Kalimat</title>
+<meta name="description" content="Meong Tales: a hybrid-AI bedtime story app. One sentence becomes a 5-page Islamic children's story, told by Oyen & Momo. On-device when possible, cloud when needed — Firebase AI Logic.">
+<link rel="stylesheet" href="styles.css">
+<!--
+  Firebase JS SDK (official CDN) — loaded lazily by js/hybrid-router.js via
+  dynamic import(). If the CDN is unreachable or no Firebase config is set,
+  the app runs fully offline in DEMO (template) mode and says so.
+  Import map pins the SDK version documented for hybrid inference (v12.5.0+).
+-->
+<script type="importmap">
+{
+  "imports": {
+    "firebase/app": "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js",
+    "firebase/app-check": "https://www.gstatic.com/firebasejs/12.5.0/firebase-app-check.js",
+    "firebase/ai": "https://www.gstatic.com/firebasejs/12.5.0/firebase-ai.js"
+  }
+}
+</script>
+</head>
+<body>
+<header class="hero">
+  <h1>🐱 Meong Tales</h1>
+  <p class="tagline" data-i18n="tagline">Cerita anak Islami dari satu kalimat — dibuat Oyen &amp; Momo.</p>
+  <p class="hybrid-note">Hybrid AI · Firebase AI Logic — on-device (Gemini Nano) when possible, cloud (Gemini Flash) when needed.</p>
+  <div class="mode-row">
+    <span id="mode-badge" class="badge demo">DEMO · Template (verified content)</span>
+    <span id="device-status" class="device-status">On-device model: unavailable (demo mode)</span>
+  </div>
+  <p id="mode-note" class="mode-note"></p>
+</header>
+
+<main>
+  <section class="panel" aria-label="Buat cerita">
+    <div class="field">
+      <label for="theme" data-i18n="themeLabel">Tema cerita (satu kalimat)</label>
+      <input id="theme" type="text" maxlength="120"
+        placeholder="Contoh: Oyen belajar sabar saat menunggu ikan" autocomplete="off">
+      <small id="figure-match" class="hint"></small>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="figure" data-i18n="figureLabel">Tokoh cerita</label>
+        <select id="figure"></select>
+      </div>
+      <div class="field">
+        <label for="age" data-i18n="ageLabel">Usia anak</label>
+        <select id="age">
+          <option value="5" data-i18n="age46">4–6 tahun</option>
+          <option value="7" selected data-i18n="age79">7–9 tahun</option>
+          <option value="11" data-i18n="age1012">10–12 tahun</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="lang" data-i18n="langLabel">Bahasa</label>
+        <select id="lang">
+          <option value="id" selected>Bahasa Indonesia</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="make-btn" class="primary" data-i18n="make">Buat Cerita</button>
+      <button id="warm-btn" class="secondary" data-i18n="warm">Siapkan Model On-Device</button>
+    </div>
+    <p id="status-line" class="status" role="status"></p>
+  </section>
+
+  <section id="story-section" class="panel" aria-label="Cerita" hidden>
+    <div class="story-head">
+      <h2 id="story-title"></h2>
+      <p id="story-meta" class="meta"></p>
+      <p class="route-row">
+        <span id="route-badge" class="badge demo"></span>
+        <span id="latency" class="meta"></span>
+      </p>
+    </div>
+
+    <div id="pages" class="pages"></div>
+
+    <div class="moral-box">
+      <h3 data-i18n="moral">Pelajaran</h3>
+      <p id="moral-text"></p>
+      <p class="sources"><strong data-i18n="sources">Sumber</strong>: <span id="sources-text"></span></p>
+    </div>
+
+    <div class="podcast-box">
+      <h3 data-i18n="dialogue">Podcast Mini — Oyen &amp; Momo</h3>
+      <div class="avatars">
+        <figure class="avatar" data-speaker="oyen">
+          <img src="assets/oyen-avatar.jpg" alt="Oyen, kucing oranye">
+          <div class="mouth" data-open="0" aria-hidden="true"></div>
+          <figcaption data-i18n="oyenCap">Oyen · suara tinggi</figcaption>
+        </figure>
+        <figure class="avatar" data-speaker="momo">
+          <img src="assets/momo-avatar.jpg" alt="Momo, kucing abu-abu">
+          <div class="mouth" data-open="0" aria-hidden="true"></div>
+          <figcaption data-i18n="momoCap">Momo · suara rendah</figcaption>
+        </figure>
+      </div>
+      <div id="dialogue" class="dialogue"></div>
+      <button id="listen-btn" class="primary" data-i18n="listen" disabled>Dengarkan (Oyen &amp; Momo)</button>
+      <p class="fineprint">Suara: Web Speech API di browser (gratis, tanpa kunci). Mulut avatar mengikuti ritme bicara — puppet, bukan lip-sync fonem.</p>
+    </div>
+  </section>
+
+  <section class="panel about">
+    <h2>Bagaimana hybrid-nya bekerja?</h2>
+    <ul>
+      <li><strong>On-device (Gemini Nano)</strong> — tugas cepat &amp; privat: mencocokkan tema ke tokoh, merangkum pelajaran, membuat dialog Oyen &amp; Momo. Prompt anak tetap di perangkat, gratis, bisa offline.</li>
+      <li><strong>Cloud (Gemini Flash)</strong> — tugas berat: menulis cerita 5 halaman penuh dengan aturan keamanan konten (hanya tokoh, moral, dan sumber terverifikasi).</li>
+      <li><strong>Demo (Template)</strong> — tanpa konfigurasi Firebase, aplikasi tetap jalan penuh dengan bank konten terverifikasi dan memberi label jujur.</li>
+    </ul>
+    <p class="fineprint">Konten Islami di aplikasi ini hanya memakai kisah &amp; rujukan yang sudah terverifikasi dari draf eBook Podcast Meong (Al-Quran saja, tanpa hadis). Model AI dilarang mengarang nomor ayat atau hadis.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Meong Tales · Podcast Meong · Open source (Apache-2.0) · Dibuat untuk #BuildHybridAI 2026</p>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

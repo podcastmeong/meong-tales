@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.DS_Store
+# NOTE: js/firebase-config.js is intentionally TRACKED (placeholder values)
+# so the app runs out of the box. Real keys go there only with App Check
+# enforced + API-key restrictions (see README.md). Never put a
+# service-account key or any server secret in this repo.
