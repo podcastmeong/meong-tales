@@ -259,8 +259,8 @@ export const FIGURES = [
 export const DIALOGUES = {
   nuh: {
     id: [
-      "Momo, Noah built a giant boat on dry land. People laughed at him. Why did he keep building it?",
-      "Because Allah told him to, Oyen. Noah stayed patient for 950 years. Obeying Allah is always the right choice.",
+      "Momo, Nabi Nuh membangun kapal besar di daratan kering. Orang-orang menertawakannya. Kenapa dia tetap membangunnya?",
+      "Karena Allah yang memerintahkannya, Oyen. Nabi Nuh bersabar selama 950 tahun. Taat kepada Allah selalu pilihan yang benar.",
     ],
     en: [
       "Momo, Noah built a giant boat on dry land. People laughed at him. Why did he keep building it?",
@@ -269,8 +269,8 @@ export const DIALOGUES = {
   },
   ayub: {
     id: [
-      "Momo, Job was sick for such a long time. How could he stay so patient?",
-      "He prayed calmly, Oyen. He knew Allah is the Most Merciful. Patience always brings something better.",
+      "Momo, Nabi Ayub sakit sangat lama. Bagaimana dia bisa tetap bersabar?",
+      "Dia berdoa dengan tenang, Oyen. Dia tahu Allah Maha Penyayang. Kesabaran selalu membawa kebaikan.",
     ],
     en: [
       "Momo, Job was sick for such a long time. How could he stay so patient?",
@@ -279,8 +279,8 @@ export const DIALOGUES = {
   },
   yunus: {
     id: [
-      "Momo, Jonah left his people while he was angry. Then a fish swallowed him!",
-      "Yes, Oyen. Never decide while you are angry. Jonah prayed in the dark, and Allah saved him.",
+      "Momo, Nabi Yunus meninggalkan kaumnya saat sedang marah. Lalu seekor ikan besar menelannya!",
+      "Ya, Oyen. Jangan memutuskan sesuatu saat sedang marah. Yunus berdoa dalam kegelapan, dan Allah menyelamatkannya.",
     ],
     en: [
       "Momo, Jonah left his people while he was angry. Then a fish swallowed him!",
@@ -289,8 +289,8 @@ export const DIALOGUES = {
   },
   yusuf: {
     id: [
-      "Momo, Joseph's brothers threw him into a well because they were jealous. That is so sad.",
-      "It is, Oyen. But Joseph stayed patient, and in the end he forgave them all. Forgiving is noble.",
+      "Momo, saudara-saudara Nabi Yusuf melemparkannya ke dalam sumur karena iri. Itu sangat menyedihkan.",
+      "Memang, Oyen. Tapi Yusuf tetap bersabar, dan akhirnya dia memaafkan mereka semua. Memaafkan itu mulia.",
     ],
     en: [
       "Momo, Joseph's brothers threw him into a well because they were jealous. That is so sad.",
@@ -299,8 +299,8 @@ export const DIALOGUES = {
   },
   musa: {
     id: [
-      "Momo, Moses stood before the sea with Pharaoh's army behind him. Was he afraid?",
-      "No, Oyen. He said, “My Lord is with me.” Allah split the sea. Never fear when Allah is with you.",
+      "Momo, Nabi Musa berdiri di depan laut dengan pasukan Firaun di belakangnya. Apakah dia takut?",
+      "Tidak, Oyen. Dia berkata, “Tuhanku bersamaku.” Allah membelah laut. Jangan takut saat Allah bersamamu.",
     ],
     en: [
       "Momo, Moses stood before the sea with Pharaoh's army behind him. Was he afraid?",
@@ -309,8 +309,8 @@ export const DIALOGUES = {
   },
   ibrahim: {
     id: [
-      "Momo, Abraham was thrown into a big fire. How did he survive that?",
-      "Allah told the fire to be cool and safe, Oyen. Allah always helps the brave and the patient.",
+      "Momo, Nabi Ibrahim dilemparkan ke dalam api besar. Bagaimana dia bisa selamat?",
+      "Allah memerintahkan api itu menjadi dingin dan aman, Oyen. Allah selalu menolong orang yang berani dan sabar.",
     ],
     en: [
       "Momo, Abraham was thrown into a big fire. How did he survive that?",

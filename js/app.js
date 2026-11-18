@@ -26,6 +26,7 @@ const state = {
   story: null,
   live: false,
   busy: false,
+  lastLiveError: null,
 };
 
 const UI_TEXT = {
@@ -45,6 +46,7 @@ const UI_TEXT = {
     sources: "Sumber",
     dialogue: "Podcast Mini — Oyen & Momo",
     liveNote: "Mode AI AKTIF — cerita dibuat model hybrid (on-device + cloud). Periksa sebelum dibacakan ke anak.",
+    liveFailNote: "Mode live GAGAL — cerita ini dari template terverifikasi, bukan output AI. Coba lagi atau periksa koneksi.",
     demoNote: "Mode DEMO — cerita dari bank konten terverifikasi (bukan output AI). Pasang konfigurasi Firebase untuk mengaktifkan mode AI.",
     needTheme: "Tulis dulu temanya, ya.",
     generating: "Membuat cerita…",
@@ -74,6 +76,7 @@ const UI_TEXT = {
     sources: "Sources",
     dialogue: "Mini Podcast — Oyen & Momo",
     liveNote: "LIVE AI mode — the story was made by the hybrid models (on-device + cloud). Please verify before reading to children.",
+    liveFailNote: "Live mode FAILED — this story is from the verified template, not AI output. Try again or check the connection.",
     demoNote: "DEMO mode — story from the verified content bank (not AI output). Add a Firebase config to enable AI mode.",
     needTheme: "Please write a theme first.",
     generating: "Making your story…",
@@ -111,7 +114,7 @@ function renderStatus() {
   if (state.live) {
     badge.textContent = "LIVE · Firebase AI Logic (hybrid)";
     badge.className = "badge live";
-    $("#mode-note").textContent = t("liveNote");
+    $("#mode-note").textContent = state.lastLiveError ? t("liveFailNote") : t("liveNote");
   } else {
     badge.textContent = "DEMO · Template (verified content)";
     badge.className = "badge demo";
@@ -195,11 +198,15 @@ async function onMakeStory() {
     if (state.live) {
       const res = await buildLiveStory({ figureId, theme, lang: state.lang, age: state.age });
       if (res.story) {
+        state.lastLiveError = null;
         renderStory(res.story);
+        renderStatus();
       } else {
         // Live failed or unparsable: honest fallback to verified template.
-        $("#status-line").textContent = res.error || "Live failed — using verified template.";
+        state.lastLiveError = res.error || "Live failed — using verified template.";
+        $("#status-line").textContent = state.lastLiveError;
         renderStory(buildTemplateStory({ figureId, theme, lang: state.lang }));
+        renderStatus();
       }
     } else {
       renderStory(buildTemplateStory({ figureId, theme, lang: state.lang }));
