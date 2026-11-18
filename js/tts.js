@@ -6,10 +6,10 @@
 // voices (Oyen = high, fast; Momo = low, slow):
 //   Oyen: highest-pitch voice available, pitch 1.6, rate 1.15
 //   Momo: lowest-pitch voice available, pitch 0.6, rate 0.9
-// NOTE (19 Nov 2026, perintah Cipta): avatar di web DIHAPUS — tidak ada lagi
-// gambar/mulut avatar di halaman. Dialog tetap dibacakan dua suara (Oyen
-// tinggi, Momo rendah) lewat Web Speech API; fungsi puppet di bawah ini
-// sekarang no-op bila elemen avatar tidak ada (semua query sudah null-safe).
+// The avatar "speaks" while audio plays: the puppet mouth opens/closes with
+// the speech rhythm (estimated from utterance timing, since the Web Speech
+// API exposes no audio stream). This is a puppet, NOT phoneme lip-sync —
+// the UI says so honestly.
 // ============================================================================
 
 const VOICE_LOCK = {

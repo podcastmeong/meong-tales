@@ -82,6 +82,20 @@ button.secondary:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .podcast-box { margin-top: 16px; }
 .podcast-box h3 { margin: 0 0 10px; }
+.avatars { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.avatar { margin: 0; text-align: center; position: relative; width: 150px; }
+.avatar img {
+  width: 150px; height: 150px; object-fit: cover; border-radius: 50%;
+  border: 3px solid var(--line); display: block; background: #eee;
+}
+.avatar.speaking img { border-color: #f2c200; }
+.avatar .mouth {
+  position: absolute; left: 50%; top: 62%; width: 26px; height: 14px;
+  margin-left: -13px; background: #5b1f1f; border-radius: 0 0 13px 13px;
+  transform: scaleY(0.15); transform-origin: top center;
+  transition: transform 0.09s linear; opacity: 0.85;
+}
+.avatar figcaption { margin-top: 8px; font-size: 0.9rem; color: var(--muted); }
 .dialogue { margin: 14px 0; display: grid; gap: 8px; }
 .dlg-line { border: 1px solid var(--line); border-radius: 9px; padding: 9px 12px; background: #fff; }
 .dlg-line strong { display: block; font-size: 0.9rem; color: var(--accent-dark); }
@@ -94,4 +108,6 @@ footer { text-align: center; color: var(--muted); font-size: 0.88rem; padding: 1
 @media (max-width: 600px) {
   .row { grid-template-columns: 1fr; }
   .hero h1 { font-size: 1.8rem; }
+  .avatar { width: 120px; }
+  .avatar img { width: 120px; height: 120px; }
 }

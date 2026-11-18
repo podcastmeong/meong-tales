@@ -72,7 +72,7 @@ Verify the pinned version against the Firebase release notes before submitting.
 Story read-aloud uses the browser's built-in **Web Speech API**
 (`speechSynthesis`) — free, no key. Oyen = high pitch, faster;
 Momo = low pitch, slower — mirroring Podcast Meong's locked TTS voices
-(Oyen MAI_01 high, Momo MAI_03 low). The two voices read the dialogue aloud
+(Oyen MAI_01 high, Momo MAI_03 low). Avatar mouths move with the speech
 rhythm (puppet, not phoneme lip-sync — labelled as such in the UI).
 
 ## Files
@@ -91,7 +91,8 @@ js/
   firebase-config.js        Placeholder config (demo mode) — edit in place to go live
   firebase-config.example.js  Reference copy of the placeholder config
 assets/
-  (avatars removed 19 Nov 2026 by owner request — no avatar images in the app)
+  oyen-avatar.jpg           Oyen (orange cat) — locked face
+  momo-avatar.jpg           Momo (grey cat) — locked face
 ```
 
 ## Tech used (for the submission form)
