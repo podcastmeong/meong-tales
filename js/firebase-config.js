@@ -19,7 +19,7 @@
 // ============================================================================
 
 export const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyD-F1wZVS8Zp5I3b6WUZ94W_9BFI6J9p7k",
+  apiKey: "AIzaSyAG7xsR8-8y0D9uDGex9V4pGZQQsgA2n-E",
   authDomain: "meong-tales.firebaseapp.com",
   projectId: "meong-tales",
   storageBucket: "meong-tales.firebasestorage.app",

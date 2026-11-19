@@ -18,8 +18,8 @@
 //     route, ms }
 // ============================================================================
 
-import { FIGURES, DIALOGUES, getFigure, matchFigure } from "./content-bank.js?v=5";
-import { generate, ROUTES } from "./hybrid-router.js?v=5";
+import { FIGURES, DIALOGUES, getFigure, matchFigure } from "./content-bank.js?v=6";
+import { generate, ROUTES } from "./hybrid-router.js?v=6";
 
 const PAGE_HEADINGS = {
   id: ["Awal Cerita", "Masalah Datang", "Saat Tersulit", "Pertolongan Allah", "Pelajaran"],
