@@ -43,7 +43,7 @@
 //      Firebase console (Security > App Check > Apps > Manage debug tokens).
 // ============================================================================
 
-import { FIREBASE_CONFIG } from "./firebase-config.js?v=7";
+import { FIREBASE_CONFIG } from "./firebase-config.js?v=8";
 
 export const ROUTES = {
   ON_DEVICE: "on-device",
@@ -104,19 +104,19 @@ export async function initHybrid() {
     // Quick tasks: prefer on-device, fall back to cloud automatically.
     models.quick = aiMod.getGenerativeModel(ai, {
       mode: aiMod.InferenceMode.PREFER_ON_DEVICE,
-      model: "gemini-3.8-flash",
+      model: "gemini-2.5-flash",
     });
     // Heavy task: prefer cloud, fall back to on-device automatically.
     models.story = aiMod.getGenerativeModel(ai, {
       mode: aiMod.InferenceMode.PREFER_IN_CLOUD,
-      model: "gemini-3.8-flash",
+      model: "gemini-2.5-flash",
     });
     // Plain cloud-only model (no InferenceMode): the guaranteed fallback
     // when the hybrid path fails BEFORE reaching the cloud — e.g. when the
     // browser's on-device Prompt API is disabled, the SDK throws
     // "The feature flag gating model execution was disabled." instead of
     // falling back. This model never touches the on-device check at all.
-    models.cloudOnly = aiMod.getGenerativeModel(ai, { model: "gemini-3.8-flash" });
+    models.cloudOnly = aiMod.getGenerativeModel(ai, { model: "gemini-2.5-flash" });
 
     liveReady = true;
     return { live: true, reason: "Firebase AI Logic ready (hybrid)." };
