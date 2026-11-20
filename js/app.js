@@ -12,10 +12,10 @@
 //   4. "Dengarkan" -> playDialogue() with locked Oyen/Momo voices.
 // ============================================================================
 
-import { FIGURES, getFigure } from "./content-bank.js?v=6";
-import { initHybrid, warmDeviceModel, getStatus, routeLabel, ROUTES } from "./hybrid-router.js?v=6";
-import { buildTemplateStory, buildLiveStory, quickMoral, suggestFigure } from "./story-engine.js?v=6";
-import { playDialogue, stopSpeaking, isTTSAvailable } from "./tts.js?v=6";
+import { FIGURES, getFigure } from "./content-bank.js?v=7";
+import { initHybrid, warmDeviceModel, getStatus, routeLabel, ROUTES } from "./hybrid-router.js?v=7";
+import { buildTemplateStory, buildLiveStory, quickMoral, suggestFigure } from "./story-engine.js?v=7";
+import { playDialogue, stopSpeaking, isTTSAvailable } from "./tts.js?v=7";
 
 const $ = (sel) => document.querySelector(sel);
 

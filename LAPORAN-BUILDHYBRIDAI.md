@@ -182,4 +182,4 @@ git push -u origin main
 ## Verifikasi versi SDK 19 Nov 2026 (sebelum submit)
 - Pin CDN `12.5.0` TERVERIFIKASI ADA (hybrid inference ditambahkan di SDK 12.1.0, Agt 2025; dokumen resmi menulis "v12.5.0+"). Tidak perlu diganti untuk lomba.
 - Versi terbaru saat dicek: Firebase JS SDK 13.4.0 (16 Nov 2026). v13.0.0 (7 Okt 2026) membawa breaking changes AI Logic (model hybrid in-cloud default jadi gemini-3.5-flash-lite; VertexAIBackend dihapus) — kode aplikasi ini tidak memakai API yang dihapus (hanya getAI, GoogleAIBackend, getGenerativeModel, InferenceMode, initializeDeviceModel, generateContent), tapi upgrade TIDAK dilakukan sebelum submit tanpa uji live penuh.
-- Model yang dipakai aplikasi: "gemini-2.0-flash" (quick + story). Masih didukung Gemini Developer API.
+- Model yang dipakai aplikasi: "gemini-3.8-flash" (quick + story). Diganti 20 Nov 2026 karena gemini-2.0-flash pensiun (404 saat generate live).
