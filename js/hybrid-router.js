@@ -32,6 +32,21 @@
 //     * the verified content bank (js/content-bank.js) assembles the story.
 //     * The UI ALWAYS labels this honestly: "DEMO · Template (verified
 //       content)" — it never pretends to be AI output.
+//   DIRECT REST (Gemini API, generativelanguage.googleapis.com) — the last
+//   live fallback, added 21 Nov 2026 after Firebase AI Logic kept failing:
+//     * Vertex AI gemini-3.8-flash: 500 "high demand" 3x (20-21 Nov) and
+//       503 "Deadline expired"; gemini-2.5-flash: 404 "no longer available
+//       to new users" on BOTH Vertex AI and the Gemini API.
+//     * Direct REST with the SAME Firebase web key works when the
+//       Generative Language API is enabled in the project — tested
+//       21 Nov: gemini-3.6-flash and gemini-3.5-flash generate fine,
+//       while 3.8/3.7-flash return 503 "high demand". So the REST cascade
+//       tries 3.6-flash, then 3.5-flash, then 3.8-flash.
+//     * It reuses FIREBASE_CONFIG.apiKey (the project's public web key,
+//       already shipped in firebase-config.js) — no new secret is exposed.
+//     * If the Generative Language API is not enabled in the project,
+//       REST returns 403 and the app falls back to the template, honestly.
+//   The UI labels this route "CLOUD (direct API) · Gemini Flash".
 //
 // LIVE MODE SETUP (one-time, by the developer — see README.md):
 //   1. Create a Firebase project, enable AI Logic (Gemini Developer API).
@@ -43,19 +58,26 @@
 //      Firebase console (Security > App Check > Apps > Manage debug tokens).
 // ============================================================================
 
-import { FIREBASE_CONFIG } from "./firebase-config.js?v=9";
+import { FIREBASE_CONFIG } from "./firebase-config.js?v=10";
 
 export const ROUTES = {
   ON_DEVICE: "on-device",
   CLOUD: "cloud",
+  CLOUD_DIRECT: "cloud-direct",
   TEMPLATE: "template",
 };
 
 const ROUTE_LABEL = {
   [ROUTES.ON_DEVICE]: "ON-DEVICE (preferred) · Gemini Nano",
   [ROUTES.CLOUD]: "CLOUD (preferred) · Gemini Flash",
+  [ROUTES.CLOUD_DIRECT]: "CLOUD (direct API) · Gemini Flash",
   [ROUTES.TEMPLATE]: "DEMO · Template (verified content)",
 };
+
+// Direct Gemini API models, in order. 3.6/3.5-flash verified working via
+// REST on 21 Nov 2026; 3.8-flash last (persistently 503 "high demand").
+const REST_MODELS = ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.8-flash"];
+const REST_TIMEOUT_MS = 45000;
 
 let firebaseModules = null; // { appMod, checkMod, aiMod } — loaded lazily, once
 let firebaseApp = null;
@@ -147,6 +169,60 @@ export async function warmDeviceModel(onProgress) {
 }
 
 /**
+ * Last live fallback: call the Gemini API directly (REST), bypassing the
+ * Firebase AI Logic SDK entirely. Uses the project's own public web key
+ * (FIREBASE_CONFIG.apiKey) — no new secret. Tries each model in
+ * REST_MODELS until one returns text. Returns { text, model } or throws
+ * the last error seen. A 403 here means the Generative Language API is
+ * not enabled in the Firebase project — enable it in Google Cloud console.
+ */
+async function generateViaRest(prompt) {
+  const apiKey = FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey;
+  if (!apiKey || apiKey.length <= 10 || apiKey.includes("PASTE_")) {
+    throw new Error("Direct REST: no usable API key in firebase-config.js.");
+  }
+  let lastErr = null;
+  for (const model of REST_MODELS) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), REST_TIMEOUT_MS);
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey,
+          },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: { temperature: 0.9, maxOutputTokens: 4096 },
+          }),
+          signal: ctrl.signal,
+        }
+      );
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        throw new Error(`${model}: HTTP ${res.status} ${body.slice(0, 200)}`);
+      }
+      const data = await res.json();
+      const parts = data && data.candidates && data.candidates[0] && data.candidates[0].content
+        ? data.candidates[0].content.parts || []
+        : [];
+      const text = parts.map((p) => p.text || "").join("").trim();
+      if (!text) throw new Error(`${model}: empty response.`);
+      return { text, model };
+    } catch (err) {
+      lastErr = err && err.message ? err.message : String(err);
+      if (ctrl.signal.aborted) lastErr = `${model}: timed out after ${REST_TIMEOUT_MS / 1000}s.`;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  throw new Error(`Direct REST failed on all models: ${lastErr}`);
+}
+
+/**
  * Run one generation task through the hybrid router.
  * task: "quick" (on-device first) or "story" (cloud first).
  * Returns { text, route, ms, error? } — route is ALWAYS reported honestly.
@@ -180,12 +256,21 @@ export async function generate(task, prompt) {
         }
         throw new Error("Empty response from cloud model.");
       } catch (err2) {
-        return {
-          text: null,
-          route: ROUTES.TEMPLATE,
-          ms: Date.now() - started,
-          error: `Live generation failed: ${err2 && err2.message ? err2.message : String(err2)} (hybrid error was: ${hybridMsg})`,
-        };
+        // Cloud-only model also failed: last live chance is the direct
+        // Gemini API (REST), which uses different models (3.6/3.5-flash)
+        // and skips the Firebase SDK entirely.
+        const cloudMsg = err2 && err2.message ? err2.message : String(err2);
+        try {
+          const rest = await generateViaRest(prompt);
+          return { text: rest.text, route: ROUTES.CLOUD_DIRECT, ms: Date.now() - started };
+        } catch (err3) {
+          return {
+            text: null,
+            route: ROUTES.TEMPLATE,
+            ms: Date.now() - started,
+            error: `Live generation failed: ${err3 && err3.message ? err3.message : String(err3)} (cloud error was: ${cloudMsg}; hybrid error was: ${hybridMsg})`,
+          };
+        }
       }
     }
     return {
